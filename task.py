@@ -1,43 +1,51 @@
 import requests
 
 def fetch_users():
+    # API endpoint for user data
     url = "https://jsonplaceholder.typicode.com/users"
 
     try:
-        # Make GET request to the API
+        # Send a GET request to the API
         response = requests.get(url)
-        response.raise_for_status()  # Raises an HTTPError if status != 200
+        response.raise_for_status()  # check if the request was successful
 
+        # Convert the response data to JSON
         users = response.json()
 
+        # If no users found, show message
         if not users:
-            print("No users found in the API response.")
+            print("No users found from the API.")
             return
 
-        # Loop through each user and print details
-        user_count = 0
+        print("Users whose city starts with 'S':\n")
+
+        count = 0
+        # Go through each user one by one
         for i, user in enumerate(users, start=1):
             name = user.get("name")
             username = user.get("username")
             email = user.get("email")
             city = user.get("address", {}).get("city")
 
-            # BONUS: Only print if city starts with 'S'
+            # Print only if city name starts with 'S' (bonus part)
             if city and city.lower().startswith('s'):
-                user_count += 1
-                print(f"User {user_count}:")
+                count += 1
+                print(f"User {count}:")
                 print(f"  Name: {name}")
                 print(f"  Username: {username}")
                 print(f"  Email: {email}")
                 print(f"  City: {city}")
                 print("-" * 25)
 
-        if user_count == 0:
-            print("No users found whose city name starts with 'S'.")
+        if count == 0:
+            print("No users found with city name starting with 'S'.")
 
     except requests.exceptions.RequestException as e:
-        print(f"Error while fetching data: {e}")
+        # This will run if there’s an error in the API call
+        print("Error while fetching data:", e)
+
 
 # Run the function
 if __name__ == "__main__":
     fetch_users()
+
